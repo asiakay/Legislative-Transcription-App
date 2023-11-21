@@ -44,9 +44,17 @@ def main():
                 conn.request("GET", path)
                 video_response = conn.getresponse()
 
-                #Download the video
-                with open("video.mp4", "wb") as f:
-                    f.write(video_response.read())
+                # Check the status of the response
+                if video_response.status == 200:
+                    # Download the video
+                    try:
+                        with open("video.mp4", "wb") as f:
+                            f.write(video_response.read())  
+                    except Exception as e:
+                        st.write(f"Error: {str(e)}")
+                else: 
+                        st.write(f"Error: {video_response.status} {video_response.reason}")
+        
 
                 # Extract audio from the video using moviepy
                 clip = VideoFileClip("video.mp4")
